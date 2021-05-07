@@ -1,4 +1,5 @@
 let users = [];
+let table = document.getElementById("user-list");
 
 $.ajax({
   url: "assets/data/db.json",
@@ -20,7 +21,17 @@ TotalMonthlyPay = (loans) => {
   }, 0);
 };
 
-let table = document.getElementById("user-list");
+IsActiveLoan = (loans) =>{
+    let status = false
+    loans.forEach(loan => {
+        if(!loan.closed){
+           status =true
+           return
+        }
+    });
+    return status
+}
+
 
 users.forEach((user, index) => {
   table.innerHTML += `<tr>
@@ -29,8 +40,10 @@ users.forEach((user, index) => {
                     <td>${user.name + " " + user.surname}</td>
                     <td>${user.salary.value + " " + user.salary.currency}</td>
                     <td>${TotalMonthlyPay(user.loans)}</td>
-                    <td><span class="badge bg-danger">Deactive</span></td>
                     <td><span class="badge bg-success">Active</span></td>
+                    <td>${!IsActiveLoan(user.loans)? '<span class="badge bg-danger">Deactive</span>' : '<span class="badge bg-success">Active</span>' }
+                    </td>
+                    
                     <td><button class="btn btn-success w-100">More detail</button></td>
                 </tr>`;
 });
