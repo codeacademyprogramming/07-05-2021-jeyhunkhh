@@ -17,21 +17,32 @@ TotalMonthlyPay = (loans) => {
     if (!loan.closed) {
       total += loan.perMonth.value;
     }
-    return total
+    return total;
   }, 0);
 };
 
-IsActiveLoan = (loans) =>{
-    let status = false
-    loans.forEach(loan => {
-        if(!loan.closed){
-           status =true
-           return
-        }
-    });
-    return status
-}
+IsActiveLoan = (loans) => {
+  let status = false;
+  loans.forEach((loan) => {
+    if (!loan.closed) {
+      status = true;
+      return;
+    }
+  });
+  return status;
+};
 
+CreditPermit = (loans, salary) => {
+  let total = TotalMonthlyPay(loans);
+  salary = salary * 0.45;
+  if (total == 0) {
+    return true;
+  } else if (total > salary) {
+    return false;
+  } else {
+    return true;
+  }
+};
 
 users.forEach((user, index) => {
   table.innerHTML += `<tr>
@@ -40,8 +51,13 @@ users.forEach((user, index) => {
                     <td>${user.name + " " + user.surname}</td>
                     <td>${user.salary.value + " " + user.salary.currency}</td>
                     <td>${TotalMonthlyPay(user.loans)}</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                    <td>${!IsActiveLoan(user.loans)? '<span class="badge bg-danger">Deactive</span>' : '<span class="badge bg-success">Active</span>' }
+                    <td>${CreditPermit(user.loans, user.salary.value) ? '<span class="badge bg-success">Active</span></td>' : '<span class="badge bg-danger">Deactive</span></td>'}
+                    
+                    <td>${
+                      !IsActiveLoan(user.loans)
+                        ? '<span class="badge bg-danger">Deactive</span>'
+                        : '<span class="badge bg-success">Active</span>'
+                    }
                     </td>
                     
                     <td><button class="btn btn-success w-100">More detail</button></td>
