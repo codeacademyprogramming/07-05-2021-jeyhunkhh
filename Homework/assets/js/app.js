@@ -43,8 +43,7 @@ CreditPermit = (loans, salary) => {
 };
 
 users.forEach((user, index) => {
-
-  var tr = document.createElement("tr");
+  let tr = document.createElement("tr");
   tr.innerHTML = `<th scope="row">${index + 1}</th>
                     <td><img src="${user.img}" class="w-50" alt=""></td>
                     <td>${user.name + " " + user.surname}</td>
@@ -63,21 +62,40 @@ users.forEach((user, index) => {
                     }
                     </td>`;
 
-  var moreBtn = document.createElement("button");
-  moreBtn.className = "btn btn-success w-100"
-  moreBtn.innerHTML="More detail"
-  moreBtn.setAttribute('data-id', index)
-  var td = document.createElement("td");
-  td.append(moreBtn)
-  tr.append(td)
+  let moreBtn = document.createElement("button");
+  moreBtn.className = "btn btn-primary w-100";
+  moreBtn.innerHTML = "More detail";
+  moreBtn.setAttribute("data-id", index);
+  moreBtn.setAttribute("data-bs-toggle", "modal");
+  moreBtn.setAttribute("data-bs-target", "#userModal");
+
+  moreBtn.addEventListener("click",()=>{
+    userLoanList(index)
+  })
+  
+  let td = document.createElement("td");
+  td.append(moreBtn);
+  tr.append(td);
   table.append(tr);
 });
 
-let btn = document.querySelectorAll(".btn");
-btn.forEach(e => {
-  e.addEventListener("click", ()=>{
-    alert(e.getAttribute('data-id'))
-  })
-});
-
-
+function userLoanList(userIndex) {  
+  let loansTable = document.getElementById("loan-list");
+  loansTable.innerHTML = " "
+      users[userIndex].loans.forEach((loan,index) => {
+        let tr = document.createElement("tr");
+        tr.innerHTML = `<tr>
+                            <th scope="row">${index + 1}</th>
+                            <td>${loan.loaner}</td>
+                            <td>${loan.amount.value + " " + loan.amount.currency}</td>
+                            <td>${loan.closed
+                              ? '<span class="badge bg-danger">Deactive</span>'
+                              : '<span class="badge bg-success">Active</span>'}</td>
+                            <td>${loan.closed ? "0": loan.perMonth.value + " " + loan.perMonth.currency} </td>
+                            <td>${loan.dueAmount.value + " " + loan.dueAmount.currency}</td>
+                            <td>${loan.loanPeriod.start}</td>
+                            <td>${loan.loanPeriod.end}</td>
+                        </tr>`;
+        loansTable.append(tr);
+      });
+}
