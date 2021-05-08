@@ -10,8 +10,6 @@ $.ajax({
   },
 });
 
-console.log(users);
-
 TotalMonthlyPay = (loans) => {
   return loans.reduce((total, loan) => {
     if (!loan.closed) {
@@ -45,21 +43,41 @@ CreditPermit = (loans, salary) => {
 };
 
 users.forEach((user, index) => {
-  table.innerHTML += `<tr>
-                    <th scope="row">${index + 1}</th>
+
+  var tr = document.createElement("tr");
+  tr.innerHTML = `<th scope="row">${index + 1}</th>
                     <td><img src="${user.img}" class="w-50" alt=""></td>
                     <td>${user.name + " " + user.surname}</td>
                     <td>${user.salary.value + " " + user.salary.currency}</td>
                     <td>${TotalMonthlyPay(user.loans)}</td>
-                    <td>${CreditPermit(user.loans, user.salary.value) ? '<span class="badge bg-success">Active</span></td>' : '<span class="badge bg-danger">Deactive</span></td>'}
+                    <td>${
+                      CreditPermit(user.loans, user.salary.value)
+                        ? '<span class="badge bg-success">Active</span></td>'
+                        : '<span class="badge bg-danger">Deactive</span></td>'
+                    }
                     
                     <td>${
                       !IsActiveLoan(user.loans)
                         ? '<span class="badge bg-danger">Deactive</span>'
                         : '<span class="badge bg-success">Active</span>'
                     }
-                    </td>
-                    
-                    <td><button class="btn btn-success w-100">More detail</button></td>
-                </tr>`;
+                    </td>`;
+
+  var moreBtn = document.createElement("button");
+  moreBtn.className = "btn btn-success w-100"
+  moreBtn.innerHTML="More detail"
+  moreBtn.setAttribute('data-id', index)
+  var td = document.createElement("td");
+  td.append(moreBtn)
+  tr.append(td)
+  table.append(tr);
 });
+
+let btn = document.querySelectorAll(".btn");
+btn.forEach(e => {
+  e.addEventListener("click", ()=>{
+    alert(e.getAttribute('data-id'))
+  })
+});
+
+
