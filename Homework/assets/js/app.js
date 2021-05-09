@@ -59,7 +59,7 @@ userList = (data) => {
                           : '<span class="badge bg-danger">Deactive</span></td>'
                       }
                       
-                      <td>${
+                      <td class="is-active">${
                         !IsActiveLoan(user.loans)
                           ? '<span class="badge bg-danger">Deactive</span>'
                           : '<span class="badge bg-success">Active</span>'
@@ -69,7 +69,6 @@ userList = (data) => {
     let moreBtn = document.createElement("button");
     moreBtn.className = "btn btn-primary w-100";
     moreBtn.innerHTML = "More detail";
-    moreBtn.setAttribute("data-id", index);
     moreBtn.setAttribute("data-bs-toggle", "modal");
     moreBtn.setAttribute("data-bs-target", "#userModal");
 
@@ -124,10 +123,10 @@ function userLoanList(userIndex) {
 let searchInput = document.querySelector(".search-input");
 let userRow = document.querySelectorAll(".user");
 
-searchInput.addEventListener("keyup", ()=>{
-  let value = searchInput.value.toLowerCase()
+searchInput.addEventListener("keyup", () => {
+  let value = searchInput.value.toLowerCase();
   for (i = 0; i < userRow.length; i++) {
-   let td = userRow[i].getElementsByTagName("td")[1];
+    let td = userRow[i].getElementsByTagName("td")[1];
     if (td) {
       txtValue = td.innerText;
       if (txtValue.toLowerCase().indexOf(value) > -1) {
@@ -137,4 +136,23 @@ searchInput.addEventListener("keyup", ()=>{
       }
     }
   }
-})
+});
+
+let checkBox = document.querySelector(".active-loan");
+let isActive = document.querySelectorAll(".is-active");
+checkBox.addEventListener("click", () => {
+  isActive.forEach((e) => {
+    let span = e.querySelector("span");
+    if (!e.parentNode.classList.contains("active")) {
+      if (span.innerText == "Active") {
+        e.parentNode.style.display = "";
+      } else {
+        e.parentNode.style.display = "none";
+      }
+      e.parentNode.classList.add("active")
+    }else{
+        e.parentNode.classList.remove("active")
+        e.parentNode.style.display = "";
+    }
+  });
+});
